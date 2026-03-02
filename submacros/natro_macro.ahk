@@ -9756,7 +9756,7 @@ nm_ContributorsImage(page:=1, contributors:=""){
 			, ["mis.c",0xffa174fe,"https://github.com/misc-et"]
 			, ["ninju",0xffe6a157,"727937385274540046"]
 			, ["Dully176",0xff138718,"522940239904243712"]
-			, ["nooby", 0xff915dd5, "https://n-by.me"]
+			, ["nooby", 0xff915dd5,"https://n-by.me"]
 		]
 
 		testers := [
@@ -9772,6 +9772,9 @@ nm_ContributorsImage(page:=1, contributors:=""){
 			, ["idote",0xfff47fff,"350433227380621322"]
 			, ["mahirishere",0xffa3bded,"724740667158429747"]
 			, ["Pinwheel",0xfff49fbc,"849962858774003712"]
+			, ["symbol_101", 0xffa42d2d,"1210002709894266911"]
+			, ["data ^-^", 0xfffcb1ff,"https://www.roblox.com/users/841425386/profile"]
+			, ["Trystar001", 0xff15199e,""]
 		]
 
 		pBM := Gdip_CreateBitmap(244,212)
@@ -9842,10 +9845,12 @@ nm_ContributorsImage(page:=1, contributors:=""){
 			{
 				if ((x >= v[4][1]) && (x <= v[4][3]) && (y >= v[4][2]) && (y <= v[4][4]))
 				{
-					if InStr(v[3], "http")
-						Run(v[3])
-					else
-						nm_RunDiscord("users/" v[3])
+					if v[3] {
+						if InStr(v[3], "http")
+							Run(v[3])
+						else
+							nm_RunDiscord("users/" v[3])
+					}
 					break
 				}
 			}
