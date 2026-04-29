@@ -16918,6 +16918,14 @@ ShellRun(prms*)
 	; IShellDispatch2.ShellExecute
 	shell.ShellExecute(prms*)
 }
+nm_onUnclaimedHiveSlot() {
+	Loop 3 {
+		if findTextInRect("claim", windowX+windowWidth//2-250, windowY+offsetY, 500, 200, 2).Has("Word") {
+			slots[A_Index] := 1
+			break
+		}
+	}
+}
 nm_claimHiveSlot(){
 	global KeyDelay, FwdKey, RightKey, LeftKey, BackKey, ZoomOut, HiveSlot, HiveConfirmed, SC_E, SC_Esc, SC_R, SC_Enter, bitmaps
 	RemoveFriendJoin() {
@@ -16996,19 +17004,17 @@ nm_claimHiveSlot(){
 				nm_endWalk()
 				sleep 500
 				RemoveFriendJoin()
-				Loop 3 {
-					if findTextInRect("claim", windowX+windowWidth//2-250, windowY+offsetY, 500, 200, 2).Has("Word") {
-						Send "{" SC_E " down}"
-						sleep 100
-						Send "{" SC_E " up}"
-						HiveConfirmed := 1
-						HiveSlot := preferred
-						MainGui["HiveSlot"].Text := HiveSlot
-						IniWrite HiveSlot, "settings\nm_config.ini", "Settings", "HiveSlot"
-						nm_setStatus("Claimed", "Hive Slot " HiveSlot)
-						MouseMove windowX+350, windowY+offsetY+100
-						return 1
-					}
+				if nm_onUnclaimedHiveSlot() {
+					Send "{" SC_E " down}"
+					sleep 100
+					Send "{" SC_E " up}"
+					HiveConfirmed := 1
+					HiveSlot := preferred
+					MainGui["HiveSlot"].Text := HiveSlot
+					IniWrite HiveSlot, "settings\nm_config.ini", "Settings", "HiveSlot"
+					nm_setStatus("Claimed", "Hive Slot " HiveSlot)
+					MouseMove windowX+350, windowY+offsetY+100
+					return 1
 				}
 			}
 			DetectHiveslots := 0
@@ -17049,11 +17055,8 @@ nm_claimHiveSlot(){
 
 			Sleep 500
 			RemoveFriendJoin()
-			Loop 3 {
-				if findTextInRect("claim", windowX+windowWidth//2-250, windowY+offsetY, 500, 200, 2).Has("Word") {
-					slots[A_Index] := 1
-					break
-				}
+			if nm_onUnclaimedHiveSlot() {
+				slots[A_Index] := 1
 			}
 		}
 
@@ -17069,11 +17072,9 @@ nm_claimHiveSlot(){
 
 				Sleep 500
 				RemoveFriendJoin()
-				Loop 3 {
-					if findTextInRect("claim", windowX+windowWidth//2-250, windowY+offsetY, 500, 200, 2).Has("Word") {
-						HiveSlot := slot
-						break 2
-					}
+				if nm_onUnclaimedHiveSlot() {
+					HiveSlot := slot
+					break
 				}
 			} else {
 				Loop (6 - HiveSlot) {
@@ -17084,11 +17085,9 @@ nm_claimHiveSlot(){
 
 					Sleep 500
 					RemoveFriendJoin()
-					Loop 3 {
-						if findTextInRect("claim", windowX+windowWidth//2-250, windowY+offsetY, 500, 200, 2).Has("Word") {
-							HiveSlot += A_Index
-							break 3
-						}
+					if nm_onUnclaimedHiveSlot() {
+						HiveSlot += A_Index
+						break 2
 					}
 				}
 			}
