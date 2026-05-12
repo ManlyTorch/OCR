@@ -17731,6 +17731,7 @@ nm_GetQuestForGiver(questGiver, quests?, &activeQuest?) {
 	hwnd := GetRobloxHWND()
 	offsetY := GetYOffset(hwnd)
 	questPos := false
+	lineText := ''
 	; search for the quest.
 	Loop 70 {
 		searchResult := findTextInRect(questGiver ':', windowX, windowY, 360, windowHeight, 2)
@@ -17739,6 +17740,7 @@ nm_GetQuestForGiver(questGiver, quests?, &activeQuest?) {
 		}
 		if searchResult.Has('Word') {
 			questPos := [searchResult['Word'].x, searchResult['Word'].y + searchResult['Word'].h + 25]
+			lineText := StrLower(searchResult['Word'].Line.Text)
 			if (A_Index > 1)
 				Gdip_DisposeImage(pBMLog)
 			break
@@ -17777,19 +17779,28 @@ nm_GetQuestForGiver(questGiver, quests?, &activeQuest?) {
 	MouseMove windowX+350, windowY+offsetY+100
 
 	if IsSet(quests) {
-		if !IsSet(activeQuest) or !isQuest(activeQuest) { ; try last quest first.
+		Loop 2 {
+			checkLine := A_Index = 1 ; Try without using OCR per quest.
+			if IsSet(activeQuest) and isQuest(activeQuest, checkLine) { ; try last quest first.
+				break
+			}
 			for key, value in quests {
-				if isQuest(key) {
+				if isQuest(key, checkLine) {
 					break
 				}
 			}
 		}
 	}
 
-	isQuest(questName) {
-		searchResult := findTextInRect(questName, windowX, windowY, 500, windowHeight, 2)
-		if !searchResult.Has('Word') {
-			return false
+	isQuest(questName, checkLine) {
+		if checkLine {
+			if !InStr(lineText, StrLower(questName)) {
+				return false
+			}
+		} else {
+			if !findTextInRect(questName, windowX, windowY, 500, windowHeight, 2, filterHeight(11)).Has('Word') {
+				return false
+			}
 		}
 
 		activeQuest := questName
