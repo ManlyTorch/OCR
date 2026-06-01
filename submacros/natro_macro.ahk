@@ -15925,6 +15925,7 @@ nm_createWalk(movement, name:="", vars:="") ; this function generates the 'walk'
 	#Include "Gdip_ImageSearch.ahk"
 	#Include "HyperSleep.ahk"
 	#Include "Roblox.ahk"
+	#Include "RapidOCR.ahk"
 	'
 	)
 
